@@ -1,0 +1,6 @@
+# Using local ads.txt file for AdSense
+
+[[redirects]]
+  from = "/"
+  to = "/game"
+  status = 301 # Permanent Redirect
