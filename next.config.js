@@ -1,5 +1,3 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	images: {
@@ -8,24 +6,6 @@ const nextConfig = {
 		],
 		deviceSizes: [360, 480, 720, 960],
 	},
-	webpack: (config, { isServer }) => {
-        if (isServer) {
-            config.plugins.push(
-                new CopyWebpackPlugin({
-                    patterns: [
-                        {
-                            from: 'app/lib',
-                            to: 'app/lib',
-                            globOptions: {
-                                ignore: ['**/*.js'],
-                            },
-                        },
-                    ],
-                })
-            );
-        }
-        return config;
-    },
 };
 
 module.exports = nextConfig;
