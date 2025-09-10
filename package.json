@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "open-next build -c next.config.opennext.js",
     "build:cloudflare": "open-next build -c next.config.opennext.js",
+    "deploy": "echo 'Deploy step is handled by Cloudflare Pages.'",
     "start": "next start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
