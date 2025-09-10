@@ -6,6 +6,12 @@ const nextConfig = {
 		],
 		deviceSizes: [360, 480, 720, 960],
 	},
+	experimental: {
+		outputFileTracingIncludes: {
+			'/game': ['./app/lib/*.json'],
+			'/game/random': ['./app/lib/*.json'],
+		},
+	},
 };
 
 module.exports = nextConfig;
