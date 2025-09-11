@@ -2,33 +2,33 @@ import Link from 'next/link';
 import styles from './game.module.css';
 import GameClientUI from './GameClientUI';
 import { getActiveGames } from '../../lib/data';
-import { getRequestContext } from '@cloudflare/next-on-pages/getContext';
 
 export const runtime = 'edge';
 
 async function getDailyGame() {
     try {
         // --- KV Cache Logic ---
-        const KV_NAMESPACE = 'GAMES_KV'; // Ensure this matches your wrangler.jsonc binding
+        // The KV namespace is exposed on process.env when running on Cloudflare
+        const kv = process.env.GAMES_KV;
+
         const CACHE_KEY = 'all_games';
         const CACHE_TTL = 3600; // 1 hour
 
         let activeGames;
-        try {
-            const { env } = getRequestContext();
-            const kv = env[KV_NAMESPACE];
-            if (kv) {
+
+        if (!kv) {
+            activeGames = getActiveGames(); // Fallback for local dev or if KV is not available
+        } else {
+            try {
                 activeGames = await kv.get(CACHE_KEY, 'json');
                 if (!activeGames) {
                     activeGames = getActiveGames();
                     await kv.put(CACHE_KEY, JSON.stringify(activeGames), { expirationTtl: CACHE_TTL });
                 }
-            } else {
-                activeGames = getActiveGames(); // Fallback for local dev
+            } catch (e) {
+                console.error("KV operation failed:", e);
+                activeGames = getActiveGames(); // Fallback on error
             }
-        } catch (e) {
-            console.error("KV operation failed:", e);
-            activeGames = getActiveGames(); // Fallback on error
         }
         // --- End of KV Cache Logic ---
 
