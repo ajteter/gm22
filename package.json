@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "open-next build",
+    "build:cf": "open-next build && ls -R .open-next",
     "start": "next start"
   },
   "keywords": [],
