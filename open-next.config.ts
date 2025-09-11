@@ -1,6 +1,6 @@
-const { defineCloudflareConfig } = require("@opennextjs/cloudflare");
+import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-module.exports = defineCloudflareConfig({
+export default defineCloudflareConfig({
   // Uncomment to enable R2 cache,
   // It should be imported as:
   // `import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";`
