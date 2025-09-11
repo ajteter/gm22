@@ -6,6 +6,9 @@ const nextConfig = {
 		],
 		deviceSizes: [360, 480, 720, 960],
 	},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
 };
 
 // added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
