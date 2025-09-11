@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build:next": "next build",
-    "build": "open-next build --build-command \"npm run build:next\"",
+    "build": "next build && open-next build",
     "start": "next start"
   },
   "keywords": [],
