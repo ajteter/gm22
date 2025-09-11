@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import styles from './play.module.css';
 import { Suspense, useState } from 'react';
@@ -17,7 +17,6 @@ const GridIcon = () => (
 
 function PlayGame() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const gameUrl = searchParams.get('url');
     const [isIframeLoading, setIsIframeLoading] = useState(true);
 

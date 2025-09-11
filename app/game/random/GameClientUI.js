@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import styles from './game.module.css';
 import { CONFIG } from '../../lib/config';
 
@@ -15,8 +13,7 @@ const GridIcon = () => (
     </svg>
 );
 
-export default function GameClientUI({ game, randomPath, listPath }) {
-    const router = useRouter();
+export default function GameClientUI({ game }) {
 
     const handleMoreGames = () => {
         // 最直接的导航方式，立即跳转

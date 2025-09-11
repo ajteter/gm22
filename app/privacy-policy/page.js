@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
       </p>
       
       <h3>Ezoic Service Privacy Policy</h3>
-      <p>This site uses Ezoic's advertising platform. The privacy policy for the Ezoic service is included below.</p>
+      <p>This site uses Ezoic&apos;s advertising platform. The privacy policy for the Ezoic service is included below.</p>
       <span id="ezoic-privacy-policy-embed"></span>
 
       <p>

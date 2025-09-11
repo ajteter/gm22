@@ -8,6 +8,13 @@
     "binding": "ASSETS",
     "directory": ".open-next/assets"
   },
+  "kv_namespaces": [
+    {
+      "binding": "GAMES_KV",
+      "id": "d9dcb0912cd64485b2dbe3f31cb6a5c6",
+      "preview_id": "d9dcb0912cd64485b2dbe3f31cb6a5c6"
+    }
+  ],
   "observability": {
     "enabled": true
   },

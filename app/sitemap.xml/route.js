@@ -1,8 +1,5 @@
-import { getActiveGames } from '../lib/data';
-
 export async function GET() {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com';
-    const games = getActiveGames();
     
     const staticPages = [
         '',
