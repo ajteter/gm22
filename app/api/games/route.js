@@ -1,8 +1,6 @@
 import { getActiveGames } from '../../lib/data';
 import { CONFIG } from '../../lib/config';
 
-export const runtime = 'edge';
-
 export async function GET(request) {
 	// The KV namespace is exposed on process.env when running on Cloudflare
 	const kv = process.env.GAMES_KV;

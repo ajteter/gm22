@@ -3,8 +3,6 @@ import styles from './game.module.css';
 import GameClientUI from './GameClientUI';
 import { getActiveGames } from '../../lib/data';
 
-export const runtime = 'edge';
-
 async function getDailyGame() {
     try {
         // --- KV Cache Logic ---
