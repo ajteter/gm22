@@ -109,15 +109,15 @@ export default function GameClientUI({ game }) {
                         </head>
                         <body>
                             <script type="text/javascript">
-                                window.atOptions = {
-                                    'key': '${CONFIG.ADS.FIXED_BANNER.key}',
-                                    'format': 'iframe',
-                                    'height': 50,
-                                    'width': 320,
-                                    'params': {}
+                                atOptions = {
+                                'key' : '50b2164cc3111fadf4f101590a95e8ef',
+                                'format' : 'iframe',
+                                'height' : 50,
+                                'width' : 320,
+                                'params' : {}
                                 };
-                            </script>
-                            <script type="text/javascript" src="${CONFIG.ADS.DOMAINS.highPerformance}/${CONFIG.ADS.FIXED_BANNER.key}/invoke.js"></script>
+                                </script>
+                                <script type="text/javascript" src="//www.highperformanceformat.com/50b2164cc3111fadf4f101590a95e8ef/invoke.js"></script>
                         </body>
                         </html>
                     `}
