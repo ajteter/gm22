@@ -5,3 +5,8 @@ main = ".open-next/server-functions/default/index.mjs"
 
 [site]
 bucket = ".open-next/assets"
+
+[build]
+command = ""
+[build.upload]
+format = "modules"
