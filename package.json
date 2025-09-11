@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "open-next build --build-command 'npx next build'",
+    "build": "next build",
+    "build:cf": "open-next build",
     "start": "next start"
   },
   "keywords": [],
