@@ -1,5 +1,5 @@
 name = "gm22"
-main = ".open-next/server-function/index.js"
+main = ".open-next/server-functions/default/index.mjs"
 
 [site]
 bucket = ".open-next/assets"
