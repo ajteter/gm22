@@ -48,7 +48,17 @@ export default function DirectGpvPage() {
             if (!game || !game.url) {
                 redirect('/game');
             } else {
-                window.location.href = game.url;
+                // 保持广告归因参数
+                const currentParams = new URLSearchParams(window.location.search);
+                if (currentParams.toString()) {
+                    const gameUrl = new URL(game.url);
+                    currentParams.forEach((value, key) => {
+                        gameUrl.searchParams.set(key, value);
+                    });
+                    window.location.href = gameUrl.toString();
+                } else {
+                    window.location.href = game.url;
+                }
             }
         };
 

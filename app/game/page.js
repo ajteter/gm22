@@ -6,15 +6,6 @@ import GamePageClient from './GamePageClient';
 import { CONFIG } from '../lib/config';
 import Loading from './loading';
 
-// We keep the metadata export, Next.js can still use it for static analysis
-export const metadata = {
-	title: 'Free HTML5 Games',
-	description: 'Browse and play free HTML5 games. Mobile-optimized games that load fast in any browser.',
-	alternates: {
-		canonical: '/game',
-	},
-};
-
 export default function Page() {
 	const searchParams = useSearchParams();
 	const page = Number(searchParams.get('page') ?? 1) || 1;
