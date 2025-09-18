@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import GamePageClient from './GamePageClient';
 import { CONFIG } from '../lib/config';
-import Loading from './loading';
+import Loading from '../loading';
 
 export default function Page() {
 	const searchParams = useSearchParams();

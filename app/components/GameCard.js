@@ -13,10 +13,23 @@ export default function GameCard({ game }) {
 	// 直接使用原始链接，通过 referrer 头进行追踪
 	const gameUrl = game.url;
 
-	// 添加点击处理函数，提供立即反馈
+	// 添加点击处理函数，保持广告归因参数
 	const handleGameClick = useCallback((url) => {
 		setIsLoading(true);
-		router.push(`/play?url=${encodeURIComponent(url)}`);
+		
+		// 获取当前页面的广告归因参数
+		const currentParams = new URLSearchParams(window.location.search);
+		const playUrl = new URL('/play', window.location.origin);
+		playUrl.searchParams.set('url', url);
+		
+		// 传递广告归因参数
+		currentParams.forEach((value, key) => {
+			if (key !== 'page') { // 排除分页参数
+				playUrl.searchParams.set(key, value);
+			}
+		});
+		
+		router.push(playUrl.pathname + playUrl.search);
 	}, [router]);
 
 	return (

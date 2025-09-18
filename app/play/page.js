@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import styles from './play.module.css';
-import { Suspense, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CONFIG } from '../lib/config';
 
 const GridIcon = () => (
@@ -15,13 +15,33 @@ const GridIcon = () => (
     </svg>
 );
 
-function PlayGame() {
+export default function PlayPage() {
     const searchParams = useSearchParams();
     const gameUrl = searchParams.get('url');
     const [isIframeLoading, setIsIframeLoading] = useState(true);
+    const [finalGameUrl, setFinalGameUrl] = useState('');
+
+    // 处理广告归因参数传递
+    useEffect(() => {
+        if (gameUrl) {
+            // 获取当前页面的所有参数（除了url参数）
+            const currentParams = new URLSearchParams(window.location.search);
+            currentParams.delete('url'); // 移除url参数本身
+            
+            if (currentParams.toString()) {
+                // 将广告归因参数添加到游戏URL
+                const gameUrlObj = new URL(gameUrl);
+                currentParams.forEach((value, key) => {
+                    gameUrlObj.searchParams.set(key, value);
+                });
+                setFinalGameUrl(gameUrlObj.toString());
+            } else {
+                setFinalGameUrl(gameUrl);
+            }
+        }
+    }, [gameUrl]);
 
     const handleMoreGames = () => {
-        // 立即导航，不等待iframe
         window.location.href = '/game';
     };
 
@@ -54,7 +74,7 @@ function PlayGame() {
                     </div>
                 )}
                 <iframe
-                    src={gameUrl}
+                    src={finalGameUrl}
                     className={styles.iframe}
                     title="Game"
                     allow="autoplay; fullscreen; payment; display-capture; camera; microphone; geolocation; accelerometer; gyroscope; magnetometer; clipboard-read; clipboard-write"
@@ -102,13 +122,5 @@ function PlayGame() {
                 />
             </div>
         </div>
-    );
-}
-
-export default function PlayPage() {
-    return (
-        <Suspense fallback={<div className={styles.container}></div>}>
-            <PlayGame />
-        </Suspense>
     );
 }
