@@ -159,3 +159,33 @@
 *   `interface Env`: 文件中声明了 `GAMES_KV: KVNamespace`，这使得在 TypeScript 代码中使用 `process.env.GAMES_KV` 或 `env.GAMES_KV` 时，编辑器能提供准确的类型提示和自动补全，增强了代码的健壮性。
 
 通过这些文件的协同工作，项目实现了将一个标准的 Next.js 应用转换并部署为在 Cloudflare 全球网络上运行的 Worker 和静态资产，兼顾了动态能力和静态性能。
+
+---
+
+## 第五阶段：构建失败修复与重构
+
+在完成静态化改造后，一次构建部署尝试失败，暴露了改造不彻底的问题。
+
+### 问题：构建失败
+
+部署过程中出现 `Module not found: Can't resolve '../lib/data'` 错误。日志显示，错误来源于以下三个文件：
+*   `app/game/page.js`
+*   `app/source/[sourceName]/page.js`
+*   `app/source/[sourceName]/random/page.js`
+
+### 根本原因
+
+在第三阶段的静态化改造中，我们删除了 `app/lib/data.js` 文件，但只更新了 `/app/game/random/page.js` 这一处引用。其他依赖此文件的页面没有被同步修改，导致它们在构建时无法找到已删除的模块。
+
+### 修复方案与重构
+
+我们对所有受影响的页面进行了修复和优化。
+
+1.  **修复 `/app/game/page.js`**:
+    *   将其从服务端组件完全改造为客户端组件 (`'use client'`)。
+    *   新的组件在客户端通过 `fetch` 从静态的 `/public/games.json` 获取完整的游戏列表，并在前端处理分页逻辑。
+
+2.  **重构 `/app/source/...` 相关页面**:
+    *   由于数据源已经统一为 `games.json`，“按源查看/随机”的功能已经过时且没有必要维护。
+    *   为了精简项目和统一用户访问路径，我们将 `app/source/[sourceName]/page.js` 和 `app/source/[sourceName]/random/page.js` 这两个页面改造成了客户端重定向组件。
+    *   现在，任何访问这些旧路径的请求，都会被自动重定向到 `/game` 或 `/game/random`，从而彻底解决了构建错误并优化了项目结构。
