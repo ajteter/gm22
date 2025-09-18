@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './game.module.css';
 
 
@@ -14,60 +14,24 @@ const GridIcon = () => (
 );
 
 export default function GameClientUI({ game }) {
-
-    const handleMoreGames = () => {
-        // 最直接的导航方式，立即跳转
-        window.location.replace('/game');
-    };
+    const [gameUrl, setGameUrl] = useState(game.url);
 
     useEffect(() => {
-        // 持续监控URL变化
-        const checkForAdRedirect = () => {
-            const currentUrl = window.location.href;
-            console.log('检测URL:', currentUrl);
-            
-            // 简化检测：如果URL不包含我们的域名游戏路径，就显示返回按钮
-            const isOurGamePage = currentUrl.includes('/game');
-            console.log('是否为游戏页面:', isOurGamePage);
-            
-            if (!isOurGamePage) {
-                console.log('显示返回按钮');
-                // 检查是否已经有返回按钮
-                if (!document.getElementById('game-return-btn')) {
-                    const returnButton = document.createElement('div');
-                    returnButton.id = 'game-return-btn';
-                    returnButton.innerHTML = `
-                        <div style="position: fixed; top: 50px; left: 15px; z-index: 9999; 
-                                    background: rgba(0,0,0,0.8); color: #fff; 
-                                    width: 40px; height: 40px; border-radius: 20px; 
-                                    cursor: pointer; display: flex; align-items: center; 
-                                    justify-content: center; font-size: 18px; font-weight: bold;
-                                    box-shadow: 0 2px 10px rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
-                            ←
-                        </div>
-                    `;
-                    returnButton.onclick = () => {
-                        console.log('点击返回按钮');
-                        window.history.back();
-                    };
-                    document.body.appendChild(returnButton);
-                    console.log('返回按钮已添加');
-                }
-            }
-        };
-
-        // 多次检测确保捕获到跳转
-        const intervals = [1000, 2000, 3000, 5000];
-        const timers = intervals.map(delay => 
-            setTimeout(checkForAdRedirect, delay)
-        );
+        // Append current page's query parameters to the game URL for attribution
+        const params = new URLSearchParams(window.location.search);
         
-        return () => {
-            timers.forEach(timer => clearTimeout(timer));
-            const btn = document.getElementById('game-return-btn');
-            if (btn) btn.remove();
-        };
-    }, []);
+        if (params.toString()) {
+            const newUrl = new URL(game.url);
+            params.forEach((value, key) => {
+                newUrl.searchParams.set(key, value);
+            });
+            setGameUrl(newUrl.toString());
+        }
+    }, [game.url]);
+
+    const handleMoreGames = () => {
+        window.location.href = '/game';
+    };
 
     return (
         <div className={styles.container}>
@@ -85,7 +49,7 @@ export default function GameClientUI({ game }) {
 
             <div className={styles.mainContent}>
                 <iframe
-                    src={game.url}
+                    src={gameUrl}
                     className={styles.iframe}
                     title={game.title}
                     allow="autoplay; fullscreen; payment; display-capture; camera; microphone; geolocation; accelerometer; gyroscope; magnetometer; clipboard-read; clipboard-write"
@@ -108,16 +72,24 @@ export default function GameClientUI({ game }) {
                             </style>
                         </head>
                         <body>
-                            <script type="text/javascript">
-                                atOptions = {
-                                'key' : '50b2164cc3111fadf4f101590a95e8ef',
-                                'format' : 'iframe',
-                                'height' : 50,
-                                'width' : 320,
-                                'params' : {}
-                                };
-                                </script>
-                                <script type="text/javascript" src="//www.highperformanceformat.com/50b2164cc3111fadf4f101590a95e8ef/invoke.js"></script>
+                            <script>
+                                // 延迟加载广告脚本
+                                setTimeout(() => {
+                                    const script = document.createElement('script');
+                                    script.type = 'text/javascript';
+                                    script.src = '//www.highperformanceformat.com/50b2164cc3111fadf4f101590a95e8ef/invoke.js';
+                                    
+                                    window.atOptions = {
+                                        'key': '50b2164cc3111fadf4f101590a95e8ef',
+                                        'format': 'iframe',
+                                        'height': 50,
+                                        'width': 320,
+                                        'params': {}
+                                    };
+                                    
+                                    document.body.appendChild(script);
+                                }, 1000);
+                            </script>
                         </body>
                         </html>
                     `}

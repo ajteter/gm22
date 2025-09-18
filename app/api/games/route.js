@@ -1,10 +1,12 @@
 import { getActiveGames } from '../../lib/data';
 import { CONFIG } from '../../lib/config';
+import { getRequestContext } from '@cloudflare/next-on-pages/getContext';
+
+export const runtime = 'edge';
 
 export async function GET(request) {
-	// The KV namespace is exposed on process.env when running on Cloudflare
-	const kv = process.env.GAMES_KV;
-
+	// IMPORTANT: Replace 'GAMES_KV' with your actual KV namespace binding name in Cloudflare.
+	const KV_NAMESPACE = 'GAMES_KV';
 	const CACHE_KEY = 'all_games';
 	const CACHE_TTL = 3600; // 1 hour in seconds
 
@@ -15,26 +17,31 @@ export async function GET(request) {
 	let allGames;
 	let cacheStatus = 'MISS';
 
-	if (!kv) {
-		// Fallback for local development or if KV is not available
-		allGames = getActiveGames();
-		cacheStatus = 'BYPASS (KV not bound)';
-	} else {
-		try {
+	try {
+		const { env } = getRequestContext();
+		const kv = env[KV_NAMESPACE];
+		
+		if (kv) {
 			allGames = await kv.get(CACHE_KEY, 'json');
 			if (allGames) {
 				cacheStatus = 'HIT';
 			} else {
 				allGames = getActiveGames();
+				// Use await to ensure the cache is written before responding on a miss.
+				// For a fire-and-forget approach, you could remove await, but this ensures consistency.
 				await kv.put(CACHE_KEY, JSON.stringify(allGames), { expirationTtl: CACHE_TTL });
 				cacheStatus = 'MISS_WROTE_CACHE';
 			}
-		} catch (e) {
-			console.error("KV operation failed:", e);
-			// Fallback to original method if KV fails
+		} else {
+			// Fallback for local development or if KV is not available
 			allGames = getActiveGames();
-			cacheStatus = `ERROR: ${e.message}`;
+			cacheStatus = 'BYPASS (KV not found)';
 		}
+	} catch (e) {
+		console.error("KV operation failed:", e);
+		// Fallback to original method if KV fails
+		allGames = getActiveGames();
+		cacheStatus = `ERROR: ${e.message}`;
 	}
 	
 	// If the request is for all games (size is very large), return the full list.
